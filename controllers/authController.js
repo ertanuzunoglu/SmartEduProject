@@ -18,33 +18,17 @@ exports.createUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-    const { email, password } = req.body;
     try {
-        // const user = await User.findOne({ email });
-        // if (user) {
-        //     bcrypt.compare(password, user.password, (err, same) => {
-        //         console.log('3', err);
-        //         if (same) {
-        //             res.status(200).send('you are logged in');
-        //         }
-        //     });
-        // }
-        await User.findOne({ email: email }, (err, user) => {
-            if (user) {
-                console.log(user.password);
-                console.log(email, password);
-                console.log('2', err);
-                bcrypt.compare(password, user.password, (err, same) => {
-                    console.log('3', err);
-                    //iki şifre birbirinin aynısıysa same true olarak döner.
-                    console.log(same);
-
-                    if (same) {
-                        res.status(200).send('you are logged in');
-                    }
-                });
-            }
-        });
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (user) {
+            bcrypt.compare(password, user.password, (err, same) => {
+                if (same) {
+                    req.session.userID = user._id;
+                    res.status(200).redirect('/');
+                }
+            });
+        }
     } catch (error) {
         res.status(400).json({
             status: 'fail',
@@ -52,4 +36,9 @@ exports.loginUser = async (req, res) => {
         });
         console.log(error);
     }
+};
+
+exports.logoutUser = async (req, res) => {
+    await req.session.destroy();
+    res.redirect('/');
 };
