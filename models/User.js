@@ -18,8 +18,8 @@ const UserSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['student', 'teacher', 'admin'],
-        default: 'student',
+        enum: ["student", "teacher", "admin"],
+        default: "student",
         required: true,
     },
     createdAt: {
@@ -28,8 +28,15 @@ const UserSchema = new Schema({
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
+        ref: "Category",
     },
+
+    courses: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course",
+        },
+    ],
 });
 
 UserSchema.pre('save', function (next) {
