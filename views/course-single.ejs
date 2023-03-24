@@ -17,10 +17,16 @@
 						</div>
 						<div class="post-content">
 							<div class="post-date">
+								<% if(user && user.role==='student') { %>
 								<form action="/courses/enroll" method="POST">
 									<input type="hidden" name="course_id" value="<%= course._id %>">
-									<button class="btn btn-lg btn-warning text-white"><span>ENROLL</span></button>
+									<% if(user && !user.courses.includes(course._id)) {%>
+									<button class="btn btn-lg btn-warning text-white" ><span>ENROLL</span></button>
+									<% } else { %>
+									<button class="btn btn-lg btn-success text-white" disabled><span>ENROLLED</span></button>
+									<% } %>
 								</form>
+								<% } %>
 							</div>
 							<div class="meta-info-blog">
 								<span><i class="fa fa-calendar"></i> <a href="#">May 11, 2015</a> </span>
@@ -40,7 +46,7 @@
 					
 					<div class="blog-author">
 						<div class="author-bio">
-							<h3 class="author_name"><%= course.name %></a></h3>
+							<h3 class="author_name"><%= course.user.name %></a></h3>
 						</div>
 					</div>
 					
@@ -48,10 +54,10 @@
 				<div class="col-lg-3 col-12 right-single">
 					<div class="widget-search">
 						<div class="site-search-area">
-							<form method="get" id="site-searchform" action="#">
+							<form method="get" id="site-searchform" action="/courses">
 								<div>
-									<input class="input-text form-control" name="search-k" id="search-k" placeholder="Search keywords..." type="text">
-									<input id="searchsubmit" value="Search" type="submit">
+									<input class="input-text form-control" name="search" id="search-k" placeholder="Search" type="text">
+									<button id="searchsubmit" value="Search" type="submit"></button>
 								</div>
 							</form>
 						</div>
@@ -59,12 +65,9 @@
 					<div class="widget-categories">
 						<h3 class="widget-title">Categories</h3>
 						<ul>
-							<li><a href="#">Political Science</a></li>
-							<li><a href="#">Business Leaders Guide</a></li>
-							<li><a href="#">Become a Product Manage</a></li>
-							<li><a href="#">Language Education</a></li>
-							<li><a href="#">Micro Biology</a></li>
-							<li><a href="#">Social Media Management</a></li>
+							<% for(let category of categories){ %>
+							<li><a href="/courses?category=<%= category.slug %>"><%= category.name  %></a></li>
+							<% } %>
 						</ul>
 					</div>
 				</div>
