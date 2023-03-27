@@ -3870,7 +3870,9 @@ a.link-style3 {
 	color: #eea412;
 }
 
-
+.required:invalid {
+    border: 2px dashed red;
+}
 
 
 
