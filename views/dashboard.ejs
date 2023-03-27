@@ -90,27 +90,77 @@
                         <% } %> 
                     </div>
                     <% for(course of courses) {%>
-                    <div class="col-lg-6 col-md-6 col-12">
-                        <div class="course-item mb-5">
-                            <div class="image-blog">
-                                <img src="/images/blog_1.jpg" alt="" class="img-fluid">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="course-item mb-5">
+                                <div class="image-blog">
+                                    <img src="/images/blog_1.jpg" alt="" class="img-fluid">
+                                </div>
+                                <div class="course-br">
+                                    <div class="course-title">
+                                        <h2><a href="/courses/<%=course.slug %>" title=""><%= course.name %></a></h2>
+                                    </div>
+                                    <div class="course-desc">
+                                        <p><%= `${course.description.substring(0,100)}...` %></p>
+                                    </div>
+                                    <div class="clearfix">
+                                        <ul style="list-style-type: none;">
+                                            <li><button  style="float:left;" class="btn btn-primary rounded-0 text-white" data-toggle="modal" data-target="#updateCourse<%= course._id %>"><span>UPDATE</span>
+                                            </button></li>
+                                            <li><a href="/courses/<%= course.slug %>?_method=DELETE" style="float:right;" onclick="return confirm('ARE YOU SURE'); console.log('merhaba')" class="btn btn-danger rounded-0 text-white"><span>DELETE</span></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="course-br">
-                                <div class="course-title">
-                                    <h2><a href="/courses/<%=course.slug %>" title=""><%= course.name %></a></h2>
-                                </div>
-                                <div class="course-desc">
-                                    <p><%= `${course.description.substring(0,100)}...` %></p>
-                                </div>
-                                <div class="clearfix">
-                                    <ul style="list-style-type: none;">
-                                        <li><a href="/courses/<%= course.slug %>?_method=PUT" style="float:left;" class="btn btn-primary rounded-0 text-white"><span>UPDATE</span></a></li>
-                                        <li><a href="/courses/<%= course.slug %>?_method=DELETE" style="float:right;" onclick="return confirm('ARE YOU SURE')" class="btn btn-danger rounded-0 text-white"><span>DELETE</span></a></li>
-                                    </ul>
+                        </div><!-- end col -->
+                        <div class="modal fade" id="updateCourse<%= course._id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body customer-box">
+                                        <!-- Tab panes -->
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="Login">
+                                                <form method="POST" action="/courses/<%= course.slug %>?_method=PUT" class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <input type="hidden" name="role" class="form-control" placeholder="Course Name" value="<%= user.role  %>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <input type="text" name="name" class="form-control" value="<%= course.name %>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <textarea rows="8" name="description" class="form-control" placeholder="Course Description" required><%= course.description %></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-12">
+                                                            <select class="form-control" name="category" %>">
+                                                                <% for(let ctg of categories) {%>
+                                                                    <option value="<%= ctg._id %>" <% if(ctg._id===course.category._id) { %> selected <% } %> ><%= ctg.name %></option>
+                                                                <% } %>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-10">
+                                                            <button type="submit" class="btn btn-light btn-radius btn-brd grd1">
+                                                                Submit
+                                                            </button>
+                                                            <button type="submit" class="btn btn-light btn-radius btn-brd grd1" data-dismiss="modal" aria-hidden="true">
+                                                                Cancel
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div><!-- end col -->
                     <% } %>
                 </div><!-- end row -->
             </div><!-- end container -->
@@ -137,7 +187,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-sm-12">
-                                            <textarea rows="8" name="description" class="form-control" placeholder="Course Description" required></textarea>
+                                            <textarea rows="15" name="description" class="form-control" placeholder="Course Description" required></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">

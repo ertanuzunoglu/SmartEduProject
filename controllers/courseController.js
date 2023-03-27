@@ -10,6 +10,7 @@ exports.createCourse = async (req, res) => {
             category: req.body.category,
             user: req.session.userID,
         });
+        console.log("created");
         req.flash("success", `${course.name} has been created succesfully`);
         res.status(201).redirect("/courses");
     } catch (error) {
@@ -66,9 +67,7 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourse = async (req, res) => {
     try {
         const user = await User.findById(req.session.userID);
-        const course = await Course.findOne({ slug: req.params.slug }).populate(
-            "user"
-        );
+        const course = await Course.findOne({ slug: req.params.slug }).populate("user");
         const categories = await Category.find();
 
         res.status(200).render("course-single", {
@@ -118,10 +117,7 @@ exports.deleteCourse = async (req, res) => {
         const courseDeleted = await Course.findOneAndRemove({
             slug: req.params.slug,
         });
-        req.flash(
-            "success",
-            `${courseDeleted.name} has been removed succesfully`
-        );
+        req.flash("success", `${courseDeleted.name} has been removed succesfully`);
         res.status(200).redirect("/users/dashboard");
     } catch (error) {
         res.status(400).json({
@@ -130,4 +126,27 @@ exports.deleteCourse = async (req, res) => {
         });
     }
 };
+
+exports.updateCourse = async (req, res) => {
+    try {
+        const courseUpdated = await Course.findOneAndUpdate(
+            { slug: req.params.slug },
+            {
+                name: req.body.name,
+                description: req.body.description,
+                category: req.body.category,
+            }
+        );
+        console.log("updated");
+        req.flash("success", `${courseUpdated.name} has been updated succesfully`);
+        res.status(200).redirect("/users/dashboard");
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            error,
+        });
+    }
+};
+
+
 
