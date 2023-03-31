@@ -45,28 +45,39 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.logoutUser = async (req, res) => {
-    await req.session.destroy();
-    res.redirect("/");
+    try {
+        await req.session.destroy();
+        res.redirect("/");
+    } catch (err) {
+        res.redirect("/");
+    }
 };
 
 exports.getDashboardPage = async (req, res) => {
-    const user = await User.findOne({ _id: req.session.userID }).populate(
-        "courses"
-    );
-    const categories = await Category.find({ slug: { $ne: "unselected" } });
-    const categoriesAll = await Category.find();
-    const courses = await Course.find({
-        user: req.session.userID,
-    }).populate("category");
-    const users = await User.find();
-    res.status(200).render("dashboard", {
-        user,
-        pageName: "dashboard",
-        categories,
-        categoriesAll,
-        courses,
-        users,
-    });
+    try {
+        const user = await User.findOne({ _id: req.session.userID }).populate(
+            "courses"
+        );
+        const categories = await Category.find({ slug: { $ne: "unselected" } });
+        const categoriesAll = await Category.find();
+        const courses = await Course.find({
+            user: req.session.userID,
+        }).populate("category");
+        const users = await User.find();
+        res.status(200).render("dashboard", {
+            user,
+            pageName: "dashboard",
+            categories,
+            categoriesAll,
+            courses,
+            users,
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            error,
+        });
+    }
 };
 
 exports.deleteUser = async (req, res) => {

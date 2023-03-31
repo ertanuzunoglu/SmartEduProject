@@ -3,18 +3,30 @@ const Course = require("../models/Course");
 const User = require("../models/User");
 
 exports.getIndexPage = async (req, res) => {
-    const course = await Course.find().sort("-createdAt").limit(2);
-    const totalCourses = await Course.find().countDocuments();
-    const totalStudent = await User.find({ role: "student" }).countDocuments();
-    const totalTeacher = await User.find({ role: "teacher" }).countDocuments();
+    try {
+        const course = await Course.find().sort("-createdAt").limit(2);
+        const totalCourses = await Course.find().countDocuments();
+        const totalStudent = await User.find({
+            role: "student",
+        }).countDocuments();
+        const totalTeacher = await User.find({
+            role: "teacher",
+        }).countDocuments();
 
-    res.status(200).render("index", {
-        pageName: "index",
-        course,
-        totalCourses,
-        totalStudent,
-        totalTeacher,
-    });
+        res.status(200).render("index", {
+            pageName: "index",
+            course,
+            totalCourses,
+            totalStudent,
+            totalTeacher,
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            error,
+        });
+    }
+    
 };
 
 exports.getAboutPage = (req, res) =>

@@ -48,6 +48,8 @@ app.use((req, res, next) => {
     next();
 });
 
+
+
 app.use(
     methodOverride("_method", {
         methods: ["POST", "GET"],
@@ -64,6 +66,9 @@ app.use("/", pageRoute);
 app.use("/courses", courseRoute);
 app.use("/categories", categoryRoute);
 app.use("/users", userRoute);
+app.use((req, res) => {
+    res.status(404).redirect("/");
+});
 
 const port = 5000;
 app.listen(port, () => console.log(`App started on port ${port} http://localhost:${port}/`));
