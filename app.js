@@ -65,7 +65,5 @@ app.use("/courses", courseRoute);
 app.use("/categories", categoryRoute);
 app.use("/users", userRoute);
 
-const port = 4000;
-app.listen(port, () =>
-    console.log(`App started on port ${port} http://localhost:4000/`)
-);
+const port = 5000;
+app.listen(port, () => console.log(`App started on port ${port} http://localhost:${port}/`));

@@ -50,15 +50,37 @@ exports.logoutUser = async (req, res) => {
 };
 
 exports.getDashboardPage = async (req, res) => {
-    const user = await User.findOne({ _id: req.session.userID }).populate("courses");
-    const categories = await Category.find();
+    const user = await User.findOne({ _id: req.session.userID }).populate(
+        "courses"
+    );
+    const categories = await Category.find({ slug: { $ne: "unselected" } });
+    const categoriesAll = await Category.find();
     const courses = await Course.find({
         user: req.session.userID,
     }).populate("category");
+    const users = await User.find();
     res.status(200).render("dashboard", {
         user,
         pageName: "dashboard",
         categories,
+        categoriesAll,
         courses,
+        users,
     });
+};
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const userDeleted = await User.findOneAndRemove({
+            _id: req.params.id,
+        });
+        await Course.deleteMany({ user: req.params.id });
+        req.flash("success", `${userDeleted._id} has been removed succesfully`);
+        res.status(200).redirect("/users/dashboard");
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            error,
+        });
+    }
 };

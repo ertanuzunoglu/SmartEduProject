@@ -50,7 +50,7 @@
         </div><!-- end section -->
     <% } %>
 
-    <% if(user.role ==='teacher') {%>
+    <% if(user.role ==='teacher') { %>
         <div class="all-title-box">
             <div class="container text-center">
                 <h1><%= user.name %><span class="m_1">TEACHER</span></h1>
@@ -138,8 +138,14 @@
                                                     <div class="form-group">
                                                         <div class="col-sm-12">
                                                             <select class="form-control" name="category" %>">
-                                                                <% for(let ctg of categories) {%>
-                                                                    <option value="<%= ctg._id %>" <% if(ctg._id===course.category._id) { %> selected <% } %> ><%= ctg.name %></option>
+                                                                <% for(ctg of categoriesAll) { %>
+                                                                    <% if(ctg.name==course.category.name) {%>        
+                                                                        <option value="<%= ctg._id %>" selected><%= ctg.name %></option>
+                                                                    <% } else if (ctg.slug=="unselected" && course.category.slug!=="unselected"){ %>
+                                                                        <option value="<%= ctg._id %>" hidden><%= ctg.name %></option>
+                                                                    <% } else { %>
+                                                                        <option value="<%= ctg._id %>"><%= ctg.name %></option>
+                                                                    <% } %>
                                                                 <% } %>
                                                             </select>
                                                         </div>
@@ -193,7 +199,7 @@
                                     <div class="form-group">
                                         <div class="col-sm-12">
                                             <select class="form-control" name="category">
-                                                    <option value="">-Select-</option>
+                                                    <option value="" selected hidden disabled>-Select-</option>
                                                 <% for(let category of categories) {%>
                                                     <option value="<%= category._id %>"><%= category.name %></option>
                                                 <% } %>
@@ -219,5 +225,116 @@
         </div>
     <% } %>
 
+    <% if(user.role==='admin') { %> 
+        <div class="all-title-box">
+        <div class="container text-center">
+            <h1><%= user.name %><span class="m_1">ADMIN</span></h1>
+        </div>
+        </div>
+        <div id="overviews" class="section wb">
+            <div class="container">
+                <div class="row mt-5">
+                    <div class="col-lg-12 col-md-12 col-12">
+                        <% if(flashMessages) { %>
+                            <% if(flashMessages.success) { %>
+                                <div class="alert alert-success">
+                                    <%= flashMessages.success  %>
+                                </div>
+                            <% } else if (flashMessages.error) { %>
+                                <div class="alert alert-danger">
+                                    <%= flashMessages.error  %>
+                                </div>
+                            <% } %>      
+                        <% } %> 
+                    </div>
+                    
+                    <table class="table">
+                        <h2>Users</h2>
+                        <thead>
+                          <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <% for(user of users) {%>
+                          <tr>
+                            <th scope="row"><%= user._id %></th>
+                            <td><%= user.email %></td>
+                            <td><%= user.role %></td>
+                            <td style="list-style-type: none;"> <li><a href="/users/<%= user._id %>?_method=DELETE" onclick="return confirm('ARE YOU SURE')" class="btn btn-danger rounded-0 text-white"><span>DELETE</span></a></li></td>
+                          </tr>
+                        <% } %>
+                        </tbody>
+                      </table>
+                </div><!-- end row -->
+
+                <div class="row mt-5">
+                    
+                    <div class="container_">
+                        <div class="col_1">
+                            <h2>Categories</h2>
+                        </div>
+                       
+                            <button class="col_2 btn btn-lg btn-warning rounded-0 text-white" href="#" data-toggle="modal" data-target="#addCategory">
+                                <span>ADD</span>
+                            </button>
+                        
+                    </div>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <% for(category of categories.reverse()) {%>
+                          <tr>
+                            <th scope="row"><%= category._id %></th>
+                            <td><%= category.name %></td>
+                            <td style="list-style-type: none;"> <li><a href="/categories/<%= category._id %>?_method=DELETE" onclick="return confirm('ARE YOU SURE')" class="btn btn-danger rounded-0 text-white"><span>DELETE</span></a></li></td>
+                          </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+                </div><!-- end row -->
+            </div><!-- end container -->
+        </div><!-- end section -->
+        <div class="modal fade" id="addCategory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body customer-box">
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="Login">
+                                <form method="POST" action="/categories" class="form-horizontal">
+                                    
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" name="name" class="form-control" placeholder="Category Name">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-light btn-radius btn-brd grd1">
+                                                Submit
+                                            </button>
+                                            <button type="submit" class="btn btn-light btn-radius btn-brd grd1" data-dismiss="modal" aria-hidden="true">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
 <% } %>
 <%- include('partials/_footer') %>

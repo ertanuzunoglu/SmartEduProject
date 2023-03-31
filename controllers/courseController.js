@@ -42,7 +42,7 @@ exports.getAllCourses = async (req, res) => {
             filter.category = null;
         }
 
-        const categories = await Category.find();
+        const categories = await Category.find({ slug: { $ne: "unselected" } });
         const courses = await Course.find({
             $or: [
                 { name: { $regex: ".*" + filter.name + ".*", $options: "i" } },
@@ -67,7 +67,9 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourse = async (req, res) => {
     try {
         const user = await User.findById(req.session.userID);
-        const course = await Course.findOne({ slug: req.params.slug }).populate("user");
+        const course = await Course.findOne({ slug: req.params.slug }).populate(
+            "user"
+        );
         const categories = await Category.find();
 
         res.status(200).render("course-single", {
@@ -117,7 +119,10 @@ exports.deleteCourse = async (req, res) => {
         const courseDeleted = await Course.findOneAndRemove({
             slug: req.params.slug,
         });
-        req.flash("success", `${courseDeleted.name} has been removed succesfully`);
+        req.flash(
+            "success",
+            `${courseDeleted.name} has been removed succesfully`
+        );
         res.status(200).redirect("/users/dashboard");
     } catch (error) {
         res.status(400).json({
@@ -131,14 +136,19 @@ exports.updateCourse = async (req, res) => {
     try {
         const courseUpdated = await Course.findOneAndUpdate(
             { slug: req.params.slug },
+
             {
                 name: req.body.name,
                 description: req.body.description,
                 category: req.body.category,
             }
         );
-        console.log("updated");
-        req.flash("success", `${courseUpdated.name} has been updated succesfully`);
+        console.log(req.body);
+        console.log("courseUpdated:", courseUpdated);
+        req.flash(
+            "success",
+            `${courseUpdated.name} has been updated succesfully`
+        );
         res.status(200).redirect("/users/dashboard");
     } catch (error) {
         res.status(400).json({

@@ -3874,13 +3874,19 @@ a.link-style3 {
     border: 2px dashed red;
 }
 
-
-
-
-
-
-
-
+.container_1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .col_1 {
+    flex-grow: 1;
+  }
+  
+  .col_2 {
+    margin-left: 10px;
+  }
 
 
 
