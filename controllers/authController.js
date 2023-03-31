@@ -48,8 +48,11 @@ exports.logoutUser = async (req, res) => {
     try {
         await req.session.destroy();
         res.redirect("/");
-    } catch (err) {
-        res.redirect("/");
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            error,
+        });
     }
 };
 
