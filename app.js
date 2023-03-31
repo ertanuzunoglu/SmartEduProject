@@ -15,7 +15,9 @@ const app = express();
 //db connect
 mongoose.set("strictQuery", false);
 mongoose
-    .connect("mongodb://localhost/smartedu-db")
+    .connect(
+        "mongodb+srv://ertanuzunoglu:Ertan6161.@cluster0.mvbohsg.mongodb.net/?retryWrites=true&w=majority"
+    )
     .then(console.log("db connection successful"))
     .catch(err => console.log("db connection failed"));
 
@@ -37,7 +39,8 @@ app.use(
         resave: false,
         saveUninitialized: true,
         store: MongoStore.create({
-            mongoUrl: "mongodb://localhost/smartedu-db",
+            mongoUrl:
+                "mongodb+srv://ertanuzunoglu:Ertan6161.@cluster0.mvbohsg.mongodb.net/?retryWrites=true&w=majority",
         }), // server yeniden başlatıldığında logout olmaması için
     })
 );
