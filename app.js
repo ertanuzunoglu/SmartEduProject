@@ -73,5 +73,5 @@ app.use((req, res) => {
     res.status(404).redirect("/");
 });
 
-const port = 5000;
+const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`App started on port ${port} http://localhost:${port}/`));
